@@ -26,11 +26,16 @@ export const GETTERS = {
   FORECAST: "FORECAST"
 };
 
+interface RootState {
+  location: Location;
+  weather: Weather;
+}
+
 export default new Vuex.Store({
   state: {
     location: new Location(),
     weather: new Weather()
-  },
+  } as RootState,
   mutations: {
     [MUTATIONS.SET_LOCATION]: (state, location: ILocation) => {
       state.location.location = location;

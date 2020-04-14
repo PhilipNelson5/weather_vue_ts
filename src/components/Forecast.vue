@@ -20,7 +20,8 @@ import { GETTERS } from "../store/store";
   computed: {
     forecasts: {
       get() {
-        return this.$store.getters[GETTERS.FORECAST];
+        return this.$store.state.weather.forecast;
+        // return this.$store.getters[GETTERS.FORECAST];
       }
     }
   }
