@@ -2,6 +2,8 @@ import axios from "axios";
 import ICurrentCondition from "@/interfaces/i-current-condition";
 import IForecast from "@/interfaces/i-forecast";
 
+const baseurl = "http://api.openweathermap.org";
+
 export default class Weather {
   public currentConditions: ICurrentCondition = {
     date: "",
@@ -24,7 +26,7 @@ export default class Weather {
     lat: number,
     lon: number
   ): Promise<ICurrentCondition> {
-    const url = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=6d50188dd5f72db7d6214feea3af2992`;
+    const url = `${baseurl}/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=6d50188dd5f72db7d6214feea3af2992`;
     return axios.get(url).then(resp => {
       const currentDate = new Date();
       const day = currentDate.getDate();
@@ -52,7 +54,7 @@ export default class Weather {
     lat: number,
     lon: number
   ): Promise<Array<IForecast>> {
-    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=6d50188dd5f72db7d6214feea3af2992`;
+    const url = `${baseurl}/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=6d50188dd5f72db7d6214feea3af2992`;
     return axios.get(url).then(resp => {
       return resp.data.list.map(
         (item: any): IForecast => {

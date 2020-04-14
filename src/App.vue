@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <TitleBar />
+    <ErrorDisplay />
     <Location />
     <CurrentConditions />
     <Forecast />
@@ -13,13 +14,15 @@ import TitleBar from "@/components/TitleBar.vue";
 import Location from "@/components/Location.vue";
 import CurrentConditions from "@/components/CurrentConditions.vue";
 import Forecast from "@/components/Forecast.vue";
+import ErrorDisplay from "@/components/ErrorDisplay.vue";
 
 @Component({
   components: {
     TitleBar,
     Location,
     CurrentConditions,
-    Forecast
+    Forecast,
+    ErrorDisplay
   }
 })
 export default class App extends Vue {}

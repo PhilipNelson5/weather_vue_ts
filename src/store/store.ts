@@ -11,7 +11,8 @@ Vue.use(Vuex);
 export const MUTATIONS = {
   SET_LOCATION: "SET_LOCATION",
   SET_CURRENT_CONDITION: "SET_CURRENT_CONDITION",
-  SET_FORECAST: "SET_FORECAST"
+  SET_FORECAST: "SET_FORECAST",
+  SET_ERROR: "SET_ERROR"
 };
 
 export const ACTIONS = {
@@ -23,19 +24,16 @@ export const ACTIONS = {
 export const GETTERS = {
   LOCATION: "LOCATION",
   CURRENT_CONDITION: "CURRENT_CONDITION",
-  FORECAST: "FORECAST"
+  FORECAST: "FORECAST",
+  ERROR: "ERROR"
 };
-
-interface RootState {
-  location: Location;
-  weather: Weather;
-}
 
 export default new Vuex.Store({
   state: {
     location: new Location(),
-    weather: new Weather()
-  } as RootState,
+    weather: new Weather(),
+    error: ""
+  },
   mutations: {
     [MUTATIONS.SET_LOCATION]: (state, location: ILocation) => {
       state.location.location = location;
@@ -48,14 +46,24 @@ export default new Vuex.Store({
     },
     [MUTATIONS.SET_FORECAST]: (state, forecast: Array<IForecast>) => {
       state.weather.forecast = forecast;
+    },
+    [MUTATIONS.SET_ERROR]: (state, msg: string) => {
+      state.error = msg;
     }
   },
   actions: {
     [ACTIONS.FETCH_LOCATION]: async ({ state, commit, dispatch }) => {
       state.location.fetchLocation().then((location: ILocation) => {
-        commit(MUTATIONS.SET_LOCATION, location);
-        dispatch(ACTIONS.FETCH_CURRENT_CONDITION);
-        dispatch(ACTIONS.FETCH_FORECAST);
+        if (Number.isNaN(location.lat) || Number.isNaN(location.lon)) {
+          commit(
+            MUTATIONS.SET_ERROR,
+            "COULD NOT FETCH LOCATION\nYou may need to turn off add blockers\nor\nenable mixed HTTP/HTTPS content for this page"
+          );
+        } else {
+          commit(MUTATIONS.SET_LOCATION, location);
+          dispatch(ACTIONS.FETCH_CURRENT_CONDITION);
+          dispatch(ACTIONS.FETCH_FORECAST);
+        }
       });
     },
     [ACTIONS.FETCH_CURRENT_CONDITION]: async ({ state, commit }) => {
@@ -85,6 +93,9 @@ export default new Vuex.Store({
     },
     [GETTERS.FORECAST]: state => {
       return state.weather.forecast;
+    },
+    [GETTERS.ERROR]: state => {
+      return state.error;
     }
   }
 });
